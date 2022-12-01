@@ -39,6 +39,6 @@ class Meeting
 
     public function addAParticipant(User $participant): void
     {
-        $this->participants->add($participant);
+        if($this->participants->count() < 5) $this->participants->add($participant);
     }
 }
