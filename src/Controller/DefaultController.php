@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Meeting;
 use App\Repository\MeetingRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,5 +28,13 @@ final class DefaultController
     public function home(): Response
     {
         return new Response('<h1>Hello</h1>');
+    }
+
+    #[Route('/meetingsStatus/{id}', name: 'meeting_status', methods: ['GET'])]
+    public function meetingStatus(string $id):JsonResponse
+    {
+        $meeting = $this->meetingRepository->get($id);
+
+        return new JsonResponse($meeting->getStatus());
     }
 }
