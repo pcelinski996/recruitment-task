@@ -28,7 +28,27 @@ class Rate
         $this->value = $value;
         $this->meeting = $meeting;
         $this->participant = $participant;
+
+        $this->checkValue();
+        $this->checkParticipant();
     }
+
+    private function checkParticipant()
+    {
+        if(!$this->meeting->participants->contains($this->participant))
+        {
+            throw new \Exception("This user hasn't participated in this meeting");
+        }
+    }
+
+    private function checkValue()
+    {
+        if($this->value > 5 || $this->value < 1)
+        {
+            throw new \Exception("Rate value is not valid");
+        }
+    }
+
 
 
 
