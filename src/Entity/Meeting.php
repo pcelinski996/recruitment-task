@@ -28,6 +28,9 @@ class Meeting
     #[ORM\ManyToMany(targetEntity: User::class)]
     public Collection $participants;
 
+    #[ORM\OneToMany(targetEntity: Rate::class, mappedBy: 'meeting')]
+    public Collection $rate;
+
     public function __construct(string $name, \DateTimeImmutable $startTime)
     {
         $this->id = uniqid();
@@ -35,6 +38,7 @@ class Meeting
         $this->startTime = $startTime;
         $this->endTime = $startTime->add(\DateInterval::createFromDateString('1 hour'));
         $this->participants = new ArrayCollection();
+        $this->rate = new ArrayCollection();
     }
 
     public function addAParticipant(User $participant): void
