@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Rate;
 use App\Repository\MeetingRepository;
+use App\Repository\RateRepository;
+use App\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,10 +14,14 @@ use Symfony\Component\Routing\Annotation\Route;
 final class DefaultController
 {
     private MeetingRepository $meetingRepository;
+    private UserRepository $userRepository;
+    private RateRepository $rateRepository;
 
-    public function __construct(MeetingRepository $meetingRepository)
+    public function __construct(MeetingRepository $meetingRepository, UserRepository $userRepository, RateRepository $rateRepository)
     {
         $this->meetingRepository = $meetingRepository;
+        $this->userRepository = $userRepository;
+        $this->rateRepository = $rateRepository;
     }
 
     #[Route('/meetings/{id}', name: 'meeting')]
@@ -34,11 +40,17 @@ final class DefaultController
     #[Route('/meetings/{id}/rate', name: 'rate',methods: ["POST"])]
     public function addRate(string $id,Request $request):JsonResponse
     {
-        $meeting = $this->meetingRepository->get($id);
         $rateValue = $request->get('value');
+        $userId = $request->get('userId');
 
-        $meeting->
 
-        return new JsonResponse();
+        $meeting = $this->meetingRepository->get($id);
+        $user = $this->userRepository->get($userId);
+
+        $rate = new Rate($rateValue, $user, $meeting);
+
+        $this->rateRepository->add($rate);
+
+        return new JsonResponse($rate);
     }
 }

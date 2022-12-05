@@ -16,11 +16,18 @@ class Rate
     #[ORM\Column()]
     public int $value;
 
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'rate')]
+    public User $participant;
 
-    public function __construct(int $value)
+    #[ORM\ManyToOne(targetEntity: Meeting::class, inversedBy: 'rate')]
+    public Meeting $meeting;
+
+    public function __construct(int $value, User $participant, Meeting $meeting)
     {
         $this->id = uniqid();
         $this->value = $value;
+        $this->meeting = $meeting;
+        $this->participant = $participant;
     }
 
 
