@@ -47,10 +47,18 @@ final class DefaultController
         $meeting = $this->meetingRepository->get($id);
         $user = $this->userRepository->get($userId);
 
-        $rate = new Rate($rateValue, $user, $meeting);
+        $response = 'done';
 
-        $this->rateRepository->add($rate);
+        try {
+            $rate = new Rate($rateValue, $user, $meeting);
+            $this->rateRepository->add($rate);
+        }
+        catch (\Exception $exception)
+        {
+            $response = $exception->getMessage();
+        }
 
-        return new JsonResponse($rate);
+
+        return new JsonResponse($response);
     }
 }
